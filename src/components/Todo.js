@@ -5,10 +5,11 @@ import TodoForm from "./TodoForm";
 
 const Todo = ({ todos, completeTodo, removeTodo, updateTodo }) => {
   const [edit, setEdit] = useState(null);
+
   const edited = (val) => {
     updateTodo(edit.id, val);
     setEdit(null);
-    document.getElementsByTagName("form")[0].style.display = "block";
+    document.getElementsByTagName("form")[0].style.display = "flex";
   };
 
   if (edit) {
@@ -17,31 +18,37 @@ const Todo = ({ todos, completeTodo, removeTodo, updateTodo }) => {
   } else {
     return (
       <>
-        {todos.map((task, index) => (
-          <div
-            className={task.isCompleted ? "todo-row completed" : "todo-row"}
-            key={index}
-          >
-            <div key={task.id} onClick={() => completeTodo(task.id)}>
-              {task.text}
+        {todos.map((task, index) => {
+          return (
+            <div
+              className={task.isComplete ? "completed todo-row" : "todo-row"}
+              key={index}
+              >
+              <div className="text"
+              onClick={() => completeTodo(task.id)}
+              
+              key={task.id}>
+                {task.text}
+              </div>
+              <div className="icons">
+                <RiCloseCircleLine
+                  onClick={() => {
+                    removeTodo(task.id);
+                  }}
+                />
+                <TiEdit
+                  onClick={() => {
+                    setEdit({
+                      id: task.id,
+                      text: task.text,
+                      isComplete: task.isComplete,
+                    });
+                  }}
+                />
+              </div>
             </div>
-            <div className="icons"></div>
-            <RiCloseCircleLine
-              onClick={() => {
-                removeTodo(task.id);
-              }}
-            />
-            <TiEdit
-              onClick={() => {
-                setEdit({
-                  id: task.id,
-                  text: task.text,
-                  isComplete: task.isComplete,
-                });
-              }}
-            />
-          </div>
-        ))}
+          );
+        })}
       </>
     );
   }

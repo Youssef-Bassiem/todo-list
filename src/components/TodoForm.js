@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 const TodoForm = ({ editTodo, addTodo, edit }) => {
   const [input, setinput] = useState(edit ? edit.text : "");
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  },[]);
   const handleClick = () => {
     setinput("");
     edit ? editTodo(input) : addTodo(uuid(), input);
@@ -14,20 +18,21 @@ const TodoForm = ({ editTodo, addTodo, edit }) => {
       }}
     >
       <input
+        ref={inputRef}
         type="text"
         onChange={(e) => {
           setinput(e.target.value);
         }}
         value={input}
-        placeholder="Add a new task"
+        placeholder={edit ? "Update task" : "Add a new task"}
       />
-      <input
-        type="button"
+      <button
         onClick={() => {
           handleClick();
         }}
-        value={"Add"}
-      />
+      >
+        {edit ? "Update" : "Add"}
+      </button>
     </form>
   );
 };
